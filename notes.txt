@@ -1,0 +1,11 @@
+RUST_LOG=info cargo run
+
+curl -X POST -H "Content-Type: application/json" -d '{"compaction_enabled": false, "retention_duration_secs": 300}' http://127.0.0.1:1337/topics/my_topic
+
+curl -i http://127.0.0.1:1337/topics/my_topic/subscribe
+
+curl -X POST -H "Content-Type: application/json" -d '{"key": null, "data": "Hello, world!"}' http://127.0.0.1:1337/topics/my_topic/publish
+
+curl -X POST -H "Content-Type: application/json" -d '{"message_id": "<message_id>"}' --cookie "subscriber_id=<subscriber_id>" http://127.0.0.1:1337/topics/my_topic/commit
+
+curl -X POST --cookie "subscriber_id=<subscriber_id>" http://127.0.0.1:1337/topics/my_topic/unsubscribe
